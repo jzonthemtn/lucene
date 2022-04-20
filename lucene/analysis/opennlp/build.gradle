@@ -23,6 +23,7 @@ dependencies {
   api project(':lucene:core')
   api project(':lucene:analysis:common')
   api 'org.apache.opennlp:opennlp-tools'
+  api 'org.apache.opennlp:opennlp-dl'
 
   testImplementation project(':lucene:test-framework')
 }

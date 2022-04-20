@@ -28,6 +28,12 @@ plugins {
   id 'com.diffplug.spotless' version "5.14.3" apply false
 }
 
+allprojects {
+  repositories {
+    mavenLocal()
+  }
+}
+
 apply from: file('gradle/globals.gradle')
 
 // General metadata.

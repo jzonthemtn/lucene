@@ -17,10 +17,14 @@
 
 package org.apache.lucene.analysis.opennlp.tools;
 
+import opennlp.dl.namefinder.NameFinderDL;
 import opennlp.tools.namefind.NameFinderME;
 import opennlp.tools.namefind.TokenNameFinder;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.util.Span;
+
+import java.io.File;
+import java.util.Map;
 
 /**
  * Supply OpenNLP Named Entity Resolution tool Requires binary models from OpenNLP project on
@@ -43,6 +47,10 @@ public class NLPNERTaggerOp {
 
   public NLPNERTaggerOp(TokenNameFinderModel model) {
     this.nameFinder = new NameFinderME(model);
+  }
+
+  public NLPNERTaggerOp(File model, File vocab, boolean doLowerCase, Map<Integer, String> ids2Labels) throws Exception {
+    this.nameFinder = new NameFinderDL(model, vocab, doLowerCase, ids2Labels);
   }
 
   public Span[] getNames(String[] words) {
