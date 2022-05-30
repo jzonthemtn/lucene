@@ -18,6 +18,7 @@
 package org.apache.lucene.analysis.opennlp.tools;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -25,6 +26,8 @@ import java.io.Reader;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import opennlp.dl.namefinder.NameFinderDL;
 import opennlp.tools.chunker.ChunkerModel;
 import opennlp.tools.lemmatizer.LemmatizerModel;
 import opennlp.tools.namefind.TokenNameFinderModel;
@@ -46,6 +49,8 @@ public class OpenNLPOpsFactory {
   private static Map<String, TokenNameFinderModel> nerModels = new ConcurrentHashMap<>();
   private static Map<String, LemmatizerModel> lemmatizerModels = new ConcurrentHashMap<>();
   private static Map<String, String> lemmaDictionaries = new ConcurrentHashMap<>();
+
+  private static Map<String, NameFinderDL> nerOnnxModels = new ConcurrentHashMap<>();
 
   public static NLPSentenceDetectorOp getSentenceDetector(String modelName) throws IOException {
     if (modelName != null) {
@@ -126,6 +131,10 @@ public class OpenNLPOpsFactory {
   public static NLPNERTaggerOp getNERTagger(String modelName) throws IOException {
     TokenNameFinderModel model = nerModels.get(modelName);
     return new NLPNERTaggerOp(model);
+  }
+
+  public static NLPNERTaggerOp getNERTagger(File model, File vocab, boolean doLowerCase, Map<Integer, String> ids2Labels) throws IOException {
+    return new NLPNERTaggerOp(model, vocab, doLowerCase, ids2Labels);
   }
 
   public static TokenNameFinderModel getNERTaggerModel(String modelName, ResourceLoader loader)
