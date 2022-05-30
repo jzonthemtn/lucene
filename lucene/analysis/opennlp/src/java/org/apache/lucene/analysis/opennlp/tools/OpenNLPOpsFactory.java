@@ -27,8 +27,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import opennlp.dl.doccat.DocumentCategorizerDL;
 import opennlp.dl.namefinder.NameFinderDL;
 import opennlp.tools.chunker.ChunkerModel;
+import opennlp.tools.doccat.DoccatModel;
 import opennlp.tools.lemmatizer.LemmatizerModel;
 import opennlp.tools.namefind.TokenNameFinderModel;
 import opennlp.tools.postag.POSModel;
@@ -41,6 +43,8 @@ import org.apache.lucene.util.ResourceLoader;
  * thread-safe.
  */
 public class OpenNLPOpsFactory {
+
+  private static Map<String, DocumentCategorizerDL> doccatCategorizers = new ConcurrentHashMap<>();
   private static Map<String, SentenceModel> sentenceModels = new ConcurrentHashMap<>();
   private static ConcurrentHashMap<String, TokenizerModel> tokenizerModels =
       new ConcurrentHashMap<>();
@@ -50,7 +54,15 @@ public class OpenNLPOpsFactory {
   private static Map<String, LemmatizerModel> lemmatizerModels = new ConcurrentHashMap<>();
   private static Map<String, String> lemmaDictionaries = new ConcurrentHashMap<>();
 
-  private static Map<String, NameFinderDL> nerOnnxModels = new ConcurrentHashMap<>();
+  public static DocumentCategorizerDL getDocumentClassifierOnnx(File modelName, File vocab, Map<Integer, String> categories) {
+    if(doccatCategorizers.containsKey(modelName.getName())) {
+      return doccatCategorizers.get(modelName.getName());
+    } else {
+      DocumentCategorizerDL documentCategorizerDL = new DocumentCategorizerDL(modelName, vocab, categories);
+      doccatCategorizers.put(modelName.getName(), documentCategorizerDL);
+      return documentCategorizerDL;
+    }
+  }
 
   public static NLPSentenceDetectorOp getSentenceDetector(String modelName) throws IOException {
     if (modelName != null) {
