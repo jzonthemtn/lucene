@@ -145,10 +145,6 @@ public class OpenNLPOpsFactory {
     return new NLPNERTaggerOp(model);
   }
 
-  public static NLPNERTaggerOp getNERTagger(File model, File vocab, boolean doLowerCase, Map<Integer, String> ids2Labels) throws IOException {
-    return new NLPNERTaggerOp(model, vocab, doLowerCase, ids2Labels);
-  }
-
   public static TokenNameFinderModel getNERTaggerModel(String modelName, ResourceLoader loader)
       throws IOException {
     TokenNameFinderModel model = nerModels.get(modelName);
